@@ -33,6 +33,8 @@
 		],
 		"no-multi-spaces": [
 			"error"
-		]
+		],
+		"code": 60,
+		"eol-last": 1
 	}
 }

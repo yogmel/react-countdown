@@ -1,64 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { useLocation } from 'react-router-dom';
-
-interface TimeLeft {
-  days: number,
-  hours: number,
-  minutes: number,
-  seconds: number
-}
-
-interface TargetDate {
-  day: string | null,
-  month: string | null,
-  year: string | null
-}
-
-function useQuery() {
-  return new URLSearchParams(useLocation().search);
-}
-
-function getRemainingTime(targetDate: TargetDate): TimeLeft {
-  const { day, month, year } = targetDate;
-
-  const difference = +new Date(`${month}/${day}/${year}`) - +new Date();
-
-  if (difference > 0) {
-    return {
-      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-      minutes: Math.floor((difference / 1000 / 60) % 60),
-      seconds: Math.floor((difference / 1000) % 60)
-    };
-  }
-
-  return { 
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0
-  };
-}
-
-function getStringifyDate(targetDate: TargetDate): string {
-  const { month, day, year } = targetDate;
-  return `${day}/${month}/${year}`;
-}
+import { TimeLeft } from './model';
+import { useRemainingTime, useQuery, useStringifyDate } from './hooks';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { useHistory } from 'react-router-dom';
 
 function App() {
   const query = useQuery();
+  const history = useHistory();
   const targetDate = {
     day: query.get('day'),
     month: query.get('month'),
     year: query.get('year')
   };
 
-  const [ time, setTime ] = useState<TimeLeft>(getRemainingTime(targetDate));
+  const [ time, setTime ] = useState<TimeLeft>(useRemainingTime(targetDate));
+  const [ startDate, setStartDate ] = useState<Date>(new Date());
+  const [ showDatePicker, setShowDatePicker ] = useState<boolean>(false);
+
+  useEffect(() => {
+    if(query.get('day') === null || query.get('month') === null || query.get('year') === null) {
+      setShowDatePicker(true);
+      history.push('/');
+    }
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setTime(getRemainingTime(targetDate));
+      setTime(useRemainingTime(targetDate));
     }, 1000);
     
     return () => clearTimeout(timer);
@@ -66,12 +36,41 @@ function App() {
 
   const { days, hours, minutes, seconds } = time;
 
+  const handleOnChange = (date: Date) => {
+    console.log('date', date.getDate());
+    setShowDatePicker(false);
+    setStartDate(date);
+    history.push(`?day=${date.getDate()}&month=${date.getMonth()}&year=${date.getFullYear()}`);
+    console.log('query.get', query.get('day'));
+    setTime(useRemainingTime({
+      day: query.get('day'),
+      month: query.get('month'),
+      year: query.get('year')
+    }));
+  };
+
+  const handleClick = () => {
+    setShowDatePicker(true);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>Tempo restante para {getStringifyDate(targetDate)}</h1>
-        <div>{ days } dias { hours } horas { minutes } minutos { seconds } segundos</div>
-      </header>
+      {!showDatePicker && (
+        <>
+          <header className="App-header">
+            <h1>Tempo restante para {useStringifyDate(targetDate)}</h1>
+            <div>{ days } dias { hours } horas { minutes } minutos { seconds } segundos</div>
+          </header>
+          <button onClick={handleClick}>Nova data</button>
+        </>
+      )}
+
+      {showDatePicker && (
+        <form>
+          <DatePicker selected={startDate} onChange={handleOnChange} />
+        </form>
+
+      )}
     </div>
   );
 }
