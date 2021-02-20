@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import './App.css';
-import { TimeLeft } from './model';
-import { useRemainingTime, useQuery, useStringifyDate } from './hooks';
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { TimeLeft } from './model';
+import { useRemainingTime, useQuery, useStringifyDate, useRandomizedMessage } from './hooks';
 import { useHistory } from 'react-router-dom';
+import 'react-dates/initialize';
+import 'react-dates/lib/css/_datepicker.css';
+import { SingleDatePicker } from 'react-dates';
+import { Moment } from 'moment';
+import moment from 'moment';
 
 function App() {
   const query = useQuery();
@@ -16,14 +20,47 @@ function App() {
   };
 
   const [ time, setTime ] = useState<TimeLeft>(useRemainingTime(targetDate));
-  const [ startDate, setStartDate ] = useState<Date>(new Date());
   const [ showDatePicker, setShowDatePicker ] = useState<boolean>(false);
+  const [ focused, setFocused ] = useState<boolean>(true);
+  const [ momentDate, setMomentDate ] = useState<Moment | null>(null);
+  const [ message, setMessage ] = useState<string>('');
+
+  enum DateType {
+    Day = 'day',
+    Month = 'month',
+    Year = 'year'
+  }
+
+  const checkDate = (dateType: DateType, value: string | null): boolean => {
+    if (value === null) {
+      return false;
+    }
+
+    switch(dateType) {
+    case DateType.Day: 
+      return !!value.match(/\d{1,2}/);
+    case DateType.Month: 
+      return !!value.match(/\d{1,2}/);
+    case DateType.Year: 
+      return !!value.match(/^\d{4}$/);
+    default:
+      return false;
+    }
+  };
 
   useEffect(() => {
-    if(query.get('day') === null || query.get('month') === null || query.get('year') === null) {
+    if(!checkDate(DateType.Day, query.get('day')) ||
+       !checkDate(DateType.Month, query.get('month')) ||
+       !checkDate(DateType.Year, query.get('year')))
+    {
       setShowDatePicker(true);
       history.push('/');
+      return;
     }
+    const dateString = `${query.get('year')}-${query.get('month')}-${query.get('day')}`;
+
+    setMomentDate(moment(dateString));
+    setMessage(useRandomizedMessage(days));
   }, []);
 
   useEffect(() => {
@@ -36,21 +73,27 @@ function App() {
 
   const { days, hours, minutes, seconds } = time;
 
-  const handleOnChange = (date: Date) => {
-    console.log('date', date.getDate());
+  const handleOnChange = (date: Moment | null) => {
     setShowDatePicker(false);
-    setStartDate(date);
-    history.push(`?day=${date.getDate()}&month=${date.getMonth()}&year=${date.getFullYear()}`);
-    console.log('query.get', query.get('day'));
-    setTime(useRemainingTime({
-      day: query.get('day'),
-      month: query.get('month'),
-      year: query.get('year')
-    }));
+    setMomentDate(date);
+
+    if (date) {
+      const day = date?.date().toString();
+      const month = (date?.month() + 1).toString();
+      const year = date?.year().toString();
+
+      history.push(`?day=${day}&month=${month}&year=${year}`);
+      setTime(useRemainingTime({ day, month, year }));
+    }
+
   };
 
   const handleClick = () => {
     setShowDatePicker(true);
+  };
+
+  const handleFocusChange = (focused: boolean) => {
+    setFocused(focused);
   };
 
   return (
@@ -61,13 +104,20 @@ function App() {
             <h1>Tempo restante para {useStringifyDate(targetDate)}</h1>
             <div>{ days } dias { hours } horas { minutes } minutos { seconds } segundos</div>
           </header>
+          <p>{message}</p>
           <button onClick={handleClick}>Nova data</button>
         </>
       )}
 
       {showDatePicker && (
         <form>
-          <DatePicker selected={startDate} onChange={handleOnChange} />
+          <SingleDatePicker
+            date={momentDate} // momentPropTypes.momentObj or null
+            onDateChange={date => handleOnChange(date)} // PropTypes.func.isRequired
+            focused={focused} // PropTypes.bool
+            onFocusChange={({focused}) => handleFocusChange(focused)} // PropTypes.func.isRequired
+            id="your_unique_id" // PropTypes.string.isRequired,
+          />
         </form>
 
       )}
