@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import './App.css';
+import './styles/App.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import { TimeLeft } from './model';
 import { useRemainingTime, useQuery, useStringifyDate, useRandomizedMessage } from './hooks';
@@ -84,8 +84,9 @@ function App() {
 
       history.push(`?day=${day}&month=${month}&year=${year}`);
       setTime(useRemainingTime({ day, month, year }));
+      const { days } = useRemainingTime({ day, month, year });
+      setMessage(useRandomizedMessage(days));
     }
-
   };
 
   const handleClick = () => {
@@ -104,21 +105,25 @@ function App() {
             <h1>Tempo restante para {useStringifyDate(targetDate)}</h1>
             <div>{ days } dias { hours } horas { minutes } minutos { seconds } segundos</div>
           </header>
-          <p>{message}</p>
-          <button onClick={handleClick}>Nova data</button>
+
+          <hr />
+
+          <p className="quote">&quot;{message}&quot;</p>
+          <button className="new-date-btn" onClick={handleClick}>Nova data</button>
         </>
       )}
 
       {showDatePicker && (
-        <form>
+        <>
+          <h2>Escolha uma data futura</h2>
           <SingleDatePicker
-            date={momentDate} // momentPropTypes.momentObj or null
-            onDateChange={date => handleOnChange(date)} // PropTypes.func.isRequired
-            focused={focused} // PropTypes.bool
-            onFocusChange={({focused}) => handleFocusChange(focused)} // PropTypes.func.isRequired
-            id="your_unique_id" // PropTypes.string.isRequired,
+            date={momentDate}
+            onDateChange={date => handleOnChange(date)}
+            focused={focused}
+            onFocusChange={({focused}) => handleFocusChange(focused)}
+            id="targetDay"
           />
-        </form>
+        </>
 
       )}
     </div>
