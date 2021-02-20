@@ -21,6 +21,7 @@ export const less24hQuotes = [
   'Toma maracujina pra dormir bem',
   'Tá na hora de terminar aquela lista que você proscrastinou fazer 10 dias atrás',
   'Já dá pra fazer check-in',
+  'Se você comprar aquela esfiha do Habibs, ainda vai estar quentinha',
 ];
 
 
