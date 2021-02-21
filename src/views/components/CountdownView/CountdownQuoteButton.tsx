@@ -1,3 +1,4 @@
+import { observer } from 'mobx-react';
 import React from 'react';
 import { Button, Quote } from './styled';
 
@@ -18,3 +19,5 @@ export function CountdownQuoteButton(props: CountdownQuoteButtonProps) {
     </>
   );
 }
+
+export default observer(CountdownQuoteButton);

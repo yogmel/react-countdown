@@ -30,3 +30,4 @@ $ npm start
 - [ ] Estudar localization
 - [ ] Adicionar testes unitários
 - [ ] Adicionar Git hooks e CI/CD
+- [ ] Adicionar caso data numérica inválida (número negativo e maiores que 31 e 12)

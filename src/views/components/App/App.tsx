@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useRandomizedMessage, useDateQueryValues } from './../../shared/hooks';
-import { TargetDate } from '../../../model';
+import { DateType, TargetDate } from '../../../model';
 import { useHistory, useLocation } from 'react-router-dom';
-import moment from 'moment';
 import { observer } from 'mobx-react';
 import DatePicker from '../DatePicker/DatePicker';
 import { AppViewModel } from '../../../viewmodels';
-import { checkFullValidDate } from '../../shared/utils/checkValidDateType';
+import { checkInvalidDate } from '../../shared/utils/checkInvalidDate';
 import { AppWrapper } from './styled';
 import CountdownWrapper from '../CountdownView/CountdownWrapper';
 
@@ -19,14 +17,19 @@ function App(props: AppProps) {
   const history = useHistory();
   const locationSearch = useLocation().search;
 
-  const { remainingTime, setTargetDate, setMessage, message } = props.editor;
-  const { targetDateFromQuery } = props;
-
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
+
+  const {
+    setTargetDate,
+    setRandomMessage,
+    getDateFromQuery,
+    message,
+  } = props.editor;
+  const { targetDateFromQuery } = props;
 
   useEffect(() => {
     // on mount, check if all values from query params are valid
-    if (checkFullValidDate(targetDateFromQuery)) {
+    if (checkInvalidDate(targetDateFromQuery)) {
       goToDatePicker();
     } else {
       setNewDateAndMessage();
@@ -34,15 +37,9 @@ function App(props: AppProps) {
   }, [message]);
 
   const setNewDateAndMessage = () => {
-    const { days } = remainingTime;
-    const { day, month, year } = useDateQueryValues(locationSearch);
-    const dateString = `${year}-${month}-${day}`;
-    setTargetDate(moment(dateString));
-    setNewMessage(days);
-  };
-
-  const setNewMessage = (days: number) => {
-    setMessage(useRandomizedMessage(days));
+    const formattedDate = getDateFromQuery(locationSearch, DateType.Moment);
+    setTargetDate(formattedDate);
+    setRandomMessage();
   };
 
   const goToDatePicker = () => {
@@ -66,7 +63,6 @@ function App(props: AppProps) {
         <DatePicker
           editor={props.editor}
           onDatePickerVisibility={handleDatePickerVisibility}
-          setNewMessage={setNewMessage}
         />
       )}
     </AppWrapper>

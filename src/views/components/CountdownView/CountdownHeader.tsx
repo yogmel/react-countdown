@@ -1,3 +1,4 @@
+import { observer } from 'mobx-react';
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { TimeLeft } from '../../../model';
@@ -40,3 +41,5 @@ export function CountdownHeader(props: CountdownHeaderProps) {
     </Header>
   );
 }
+
+export default observer(CountdownHeader);

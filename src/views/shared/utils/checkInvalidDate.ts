@@ -26,7 +26,7 @@ export const checkValidDateType = (
   }
 };
 
-export const checkFullValidDate = (queryDate: TargetDate) => {
+export const checkInvalidDate = (queryDate: TargetDate) => {
   return (
     !checkValidDateType(DateType.Day, queryDate.day) ||
     !checkValidDateType(DateType.Month, queryDate.month) ||

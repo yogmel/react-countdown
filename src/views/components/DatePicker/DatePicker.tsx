@@ -6,12 +6,12 @@ import { SingleDatePicker } from 'react-dates';
 import { Moment } from 'moment';
 import { useHistory } from 'react-router-dom';
 import { AppViewModel } from '../../../viewmodels';
-import { useRandomizedMessage, useRemainingTime } from '../../shared/hooks';
+import { useRemainingTime } from '../../shared/hooks';
+import { TargetDate } from '../../../model';
 
 export interface DatePickerProps {
   editor: AppViewModel;
   onDatePickerVisibility: (value: boolean) => void;
-  setNewMessage: (days: number) => void;
 }
 
 function DatePicker(props: DatePickerProps) {
@@ -19,9 +19,9 @@ function DatePicker(props: DatePickerProps) {
     targetDate,
     setTargetDate,
     setRemainingTime,
-    setMessage,
+    setRandomMessage,
   } = props.editor;
-  const { onDatePickerVisibility, setNewMessage } = props;
+  const { onDatePickerVisibility } = props;
   const history = useHistory();
 
   const [focused, setFocused] = useState<boolean>(false);
@@ -31,19 +31,24 @@ function DatePicker(props: DatePickerProps) {
   };
 
   const handleOnChange = (date: Moment | null) => {
-    onDatePickerVisibility(false);
-    setTargetDate(date);
-
     if (date) {
-      const day = date?.date().toString();
-      const month = (date?.month() + 1).toString();
-      const year = date?.year().toString();
-
-      history.push(`?day=${day}&month=${month}&year=${year}`);
-      setRemainingTime(useRemainingTime({ day, month, year }));
-      const { days } = useRemainingTime({ day, month, year });
-      setNewMessage(days);
+      updateRemainingTime(date);
+      setRandomMessage();
+      goToCountdown(date);
     }
+  };
+
+  const updateRemainingTime = (date: Moment) => {
+    const targetDate = new TargetDate(date);
+
+    setRemainingTime(useRemainingTime(targetDate));
+    setTargetDate(date);
+  };
+
+  const goToCountdown = (date: Moment) => {
+    const { day, month, year } = new TargetDate(date);
+    history.push(`?day=${day}&month=${month}&year=${year}`);
+    onDatePickerVisibility(false);
   };
 
   return (

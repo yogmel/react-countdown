@@ -12,11 +12,18 @@ export interface CountdownWrapperProps {
 
 function CountdownWrapper(props: CountdownWrapperProps): ReactElement {
   const { handleDatePickerVisibility } = props;
-  const { remainingTime, setRemainingTime, message } = props.editor;
+  const {
+    remainingTime,
+    setRemainingTime,
+    setRandomMessage,
+    message,
+  } = props.editor;
 
-  const [quote, setQuote] = useState<string>(message);
-
-  useEffect(() => setQuote(message), [message]);
+  useEffect(() => {
+    if (message === '') {
+      setRandomMessage();
+    }
+  }, []);
 
   return (
     <>
@@ -26,7 +33,7 @@ function CountdownWrapper(props: CountdownWrapperProps): ReactElement {
       />
       <Divider />
       <CountdownQuoteButton
-        message={quote}
+        message={message}
         handleDatePickerVisibility={handleDatePickerVisibility}
       />
     </>

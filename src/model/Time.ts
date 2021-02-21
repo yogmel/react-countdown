@@ -5,8 +5,7 @@ export interface TimeLeft {
   seconds: number;
 }
 
-export interface TargetDate {
-  day: string | null;
-  month: string | null;
-  year: string | null;
+export enum DateType {
+  TargetDate,
+  Moment,
 }
