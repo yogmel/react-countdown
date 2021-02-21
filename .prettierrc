@@ -1,0 +1,10 @@
+{
+  "tabWidth": 2,
+  "arrowParens": "always",
+  "endOfLine": "lf",
+  "bracketSpacing": true,
+  "htmlWhitespaceSensitivity": "css",
+  "semi": true,
+  "singleQuote": true,
+  "quoteProps": "as-needed"
+}

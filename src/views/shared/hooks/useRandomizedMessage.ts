@@ -1,6 +1,12 @@
-import { farAwayQuotes, less24hQuotes, lessThanMonthQuotes, lessThanWeekQuotes } from '../data/quotes';
+import {
+  farAwayQuotes,
+  less24hQuotes,
+  lessThanMonthQuotes,
+  lessThanWeekQuotes,
+} from '../../../data/quotes';
 
-export const generateRandomNum = (arrLength: number) => Math.floor(Math.random() * Math.floor(arrLength));
+export const generateRandomNum = (arrLength: number) =>
+  Math.floor(Math.random() * Math.floor(arrLength));
 
 export const useRandomizedMessage = (days: number) => {
   console.log('days', days);

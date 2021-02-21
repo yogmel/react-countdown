@@ -1,4 +1,4 @@
-import { TargetDate } from './../model';
+import { TargetDate } from '../../../model';
 
 export function useStringifyDate(targetDate: TargetDate): string {
   const { month, day, year } = targetDate;

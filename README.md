@@ -26,5 +26,7 @@ $ npm start
   - [x] Reroute para página de seleção se algum valor for `null`
 - [x] Estilizar app
 - [x] Adicionar lista de mensagens para serem mostradas em algum momentos da contagem regressiva
-- [ ] Refatorar código
+- [x] Refatorar código
 - [ ] Estudar localization
+- [ ] Adicionar testes unitários
+- [ ] Adicionar Git hooks e CI/CD
