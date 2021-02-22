@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+
 export const farAwayQuotes = [
   'Vixe, ainda falta muito chão',
   'Espera sentada',
@@ -23,5 +25,3 @@ export const less24hQuotes = [
   'Já dá pra fazer check-in',
   'Se você comprar aquela esfiha do Habibs, ainda vai estar quentinha',
 ];
-
-
