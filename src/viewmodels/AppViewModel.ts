@@ -79,13 +79,13 @@ export class AppViewModel {
       year: query.get('year'),
     };
 
+    const dayNumber = targetDate.day && parseInt(targetDate.day) + 1;
+
     switch (format) {
       case DateType.TargetDate:
         return targetDate;
       case DateType.Moment:
-        return moment(
-          `${targetDate.year}-${targetDate.month}-${targetDate.day}`
-        );
+        return moment(`${targetDate.year}-${targetDate.month}-${dayNumber}`);
       default:
         return null;
     }
