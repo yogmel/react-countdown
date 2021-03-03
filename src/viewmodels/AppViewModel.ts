@@ -2,6 +2,8 @@ import { makeAutoObservable } from 'mobx';
 import moment from 'moment';
 import { Moment } from 'moment';
 import {
+  anpanBirthdayQuote,
+  anpanQuotes,
   farAwayQuotes,
   less24hQuotes,
   lessThanMonthQuotes,
@@ -13,9 +15,11 @@ import { generateRandomNum } from '../views/shared/utils';
 export class AppViewModel {
   private _targetDate: Moment | null = null;
   private _message: string = '';
+  private _anpanMode: boolean = false;
 
   constructor(private _remainingTime: TimeLeft) {
     makeAutoObservable(this);
+    this.getDateFromQuery = this.getDateFromQuery.bind(this);
   }
 
   get remainingTime(): TimeLeft {
@@ -30,6 +34,10 @@ export class AppViewModel {
     return this._message;
   }
 
+  get anpanMode(): boolean {
+    return this._anpanMode;
+  }
+
   setRemainingTime = (value: TimeLeft) => {
     this._remainingTime = value;
   };
@@ -42,7 +50,26 @@ export class AppViewModel {
     this._message = value;
   };
 
+  setAnpanMode = (value: boolean) => {
+    this._anpanMode = value;
+  };
+
+  checkAnpanBDay = (): boolean => {
+    return this.targetDate?.date() === 17 && this.targetDate.month() === 5;
+  };
+
   setRandomMessage = () => {
+    if (this.anpanMode) {
+      if (this.checkAnpanBDay()) {
+        return this.setMessage(
+          anpanBirthdayQuote[generateRandomNum(anpanBirthdayQuote.length)]
+        );
+      }
+      return this.setMessage(
+        anpanQuotes[generateRandomNum(anpanQuotes.length)]
+      );
+    }
+
     const { days } = this.remainingTime;
     if (days > 30) {
       this.setMessage(farAwayQuotes[generateRandomNum(farAwayQuotes.length)]);
@@ -78,6 +105,8 @@ export class AppViewModel {
       month: query.get('month'),
       year: query.get('year'),
     };
+
+    this.setAnpanMode(query.get('anpanMode') === 'true');
 
     const dayNumber = targetDate.day && parseInt(targetDate.day) + 1;
 

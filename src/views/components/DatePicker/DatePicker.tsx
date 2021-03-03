@@ -8,6 +8,7 @@ import { useHistory } from 'react-router-dom';
 import { AppViewModel } from '../../../viewmodels';
 import { useRemainingTime } from '../../shared/hooks';
 import { TargetDate } from '../../../model';
+import { CheckboxWrapper } from './styled';
 
 export interface DatePickerProps {
   editor: AppViewModel;
@@ -16,6 +17,7 @@ export interface DatePickerProps {
 
 function DatePicker(props: DatePickerProps) {
   const {
+    anpanMode: defaultAnpanMode,
     targetDate,
     setTargetDate,
     setRemainingTime,
@@ -25,6 +27,7 @@ function DatePicker(props: DatePickerProps) {
   const history = useHistory();
 
   const [focused, setFocused] = useState<boolean>(false);
+  const [anpanMode, setAnpanMode] = useState<boolean>(defaultAnpanMode);
 
   const handleFocusChange = (focused: boolean) => {
     setFocused(focused);
@@ -47,8 +50,18 @@ function DatePicker(props: DatePickerProps) {
 
   const goToCountdown = (date: Moment) => {
     const { day, month, year } = new TargetDate(date);
-    history.push(`?day=${day}&month=${month}&year=${year}`);
+
+    history.push(
+      `?day=${day}&month=${month}&year=${year}${
+        anpanMode ? '&anpanMode=true' : ''
+      }`
+    );
+
     onDatePickerVisibility(false);
+  };
+
+  const handleCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAnpanMode(e.target.checked);
   };
 
   return (
@@ -61,6 +74,16 @@ function DatePicker(props: DatePickerProps) {
         focused={focused}
         onFocusChange={({ focused }) => handleFocusChange(focused)}
       />
+      <CheckboxWrapper>
+        <label htmlFor="anpanMode">
+          <input
+            type="checkbox"
+            defaultChecked={anpanMode}
+            onChange={handleCheck}
+          />
+          <span>Habilitar Anpan Mode</span>
+        </label>
+      </CheckboxWrapper>
     </>
   );
 }

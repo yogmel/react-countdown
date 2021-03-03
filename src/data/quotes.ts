@@ -25,3 +25,19 @@ export const less24hQuotes = [
   'Já dá pra fazer check-in',
   'Se você comprar aquela esfiha do Habibs, ainda vai estar quentinha',
 ];
+
+export const anpanQuotes = [
+  'Você me mandou pra Nárnia, seu porra',
+  'Vai no banheiro terminar essa bosta que você começou',
+  'Faltou armadura, né, Maokai',
+  'Para de bater no mato. Mostra minha calcinha',
+  'Saudades Zonya hein bruxinha',
+];
+
+export const anpanBirthdayQuote = [
+  'Dia da perfeição',
+  'Melhor dia do ano depois do aniversário de Jesus',
+  'Vá em Amazon.com, veja minha wishlish e me envie qualquer coisa da lista. Endereço por pvt',
+  'Mais um ano com um score menor de Regina George',
+  'Gosto de cookie, brownie e miojo. Também servem como presente',
+];
