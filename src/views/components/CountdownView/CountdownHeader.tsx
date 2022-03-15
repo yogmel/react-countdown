@@ -5,6 +5,7 @@ import { TimeLeft } from '../../../model';
 import {
   useDateQueryValues,
   useRemainingTime,
+  useRetrieveMessage,
   useStringifyDate,
 } from '../../shared/hooks';
 import { Header, TextWrapper, Title } from './styled';
@@ -19,8 +20,16 @@ export function CountdownHeader(props: CountdownHeaderProps) {
   const { days, hours, minutes, seconds } = props.remainingTime;
 
   const locationSearch = useLocation().search;
+  const message = useRetrieveMessage(locationSearch);
+
+  const setDocumentTitle = () => {
+    if (message) {
+      document.title = 'Contagem regressiva para: ' + message;
+    }
+  };
 
   useEffect(() => {
+    setDocumentTitle();
     const timer = setTimeout(function () {
       const targetDate = useDateQueryValues(locationSearch);
       setRemainingTime(useRemainingTime(targetDate));
@@ -35,6 +44,7 @@ export function CountdownHeader(props: CountdownHeaderProps) {
         Tempo restante para{' '}
         {useStringifyDate(useDateQueryValues(locationSearch))}
       </Title>
+      {message && <p>Ou para {message}</p>}
       <TextWrapper>
         {days} dias {hours} horas {minutes} minutos {seconds} segundos
       </TextWrapper>

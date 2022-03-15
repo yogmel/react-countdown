@@ -24,7 +24,7 @@ export const Divider = styled.div`
   border: 1px solid white;
 `;
 
-export const Button = styled.div`
+export const Button = styled.button`
   font-size: 15px;
   padding: 10px 20px;
   background-color: white;
@@ -35,6 +35,8 @@ export const Button = styled.div`
   font-weight: lighter;
   letter-spacing: 2px;
   cursor: pointer;
+  margin: 0 auto;
+  display: block;
 `;
 
 export const Quote = styled.p`
