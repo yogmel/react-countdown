@@ -15,6 +15,7 @@ import { generateRandomNum } from '../views/shared/utils';
 export class AppViewModel {
   private _targetDate: Moment | null = null;
   private _message: string = '';
+  private _title: string = '';
   private _anpanMode: boolean = false;
 
   constructor(private _remainingTime: TimeLeft) {
@@ -34,6 +35,10 @@ export class AppViewModel {
     return this._message;
   }
 
+  get title(): string {
+    return this._message;
+  }
+
   get anpanMode(): boolean {
     return this._anpanMode;
   }
@@ -48,6 +53,10 @@ export class AppViewModel {
 
   setMessage = (value: string) => {
     this._message = value;
+  };
+
+  setTitle = (value: string) => {
+    this._title = value;
   };
 
   setAnpanMode = (value: boolean) => {

@@ -1,5 +1,4 @@
-import { observer } from 'mobx-react';
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Quote } from './styled';
 
 export interface CountdownQuoteButtonProps {
@@ -12,12 +11,12 @@ export function CountdownQuoteButton(props: CountdownQuoteButtonProps) {
 
   return (
     <>
-      <Quote>&quot;{message}&quot;</Quote>
-      <Button onClick={() => handleDatePickerVisibility(true)}>
-        Nova data
-      </Button>
+      <div>
+        <Quote>&quot;{message}&quot;</Quote>
+        <Button onClick={() => handleDatePickerVisibility(true)}>
+          Nova data
+        </Button>
+      </div>
     </>
   );
 }
-
-export default observer(CountdownQuoteButton);

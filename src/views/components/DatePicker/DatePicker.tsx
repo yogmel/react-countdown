@@ -9,6 +9,7 @@ import { AppViewModel } from '../../../viewmodels';
 import { useRemainingTime } from '../../shared/hooks';
 import { TargetDate } from '../../../model';
 import { CheckboxWrapper } from './styled';
+import { TitleWrapper } from './styled/TitleWrapper';
 
 export interface DatePickerProps {
   editor: AppViewModel;
@@ -28,6 +29,15 @@ function DatePicker(props: DatePickerProps) {
 
   const [focused, setFocused] = useState<boolean>(false);
   const [anpanMode, setAnpanMode] = useState<boolean>(defaultAnpanMode);
+  const [title, setTitle] = useState<string>('');
+
+  const updateTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value.trim());
+  };
+
+  const setDocumentTitle = () => {
+    document.title = 'Contagem regressiva para: ' + title;
+  };
 
   const handleFocusChange = (focused: boolean) => {
     setFocused(focused);
@@ -37,6 +47,9 @@ function DatePicker(props: DatePickerProps) {
     if (date) {
       updateRemainingTime(date);
       setRandomMessage();
+      if (title) {
+        setDocumentTitle();
+      }
       goToCountdown(date);
     }
   };
@@ -54,7 +67,7 @@ function DatePicker(props: DatePickerProps) {
     history.push(
       `?day=${day}&month=${month}&year=${year}${
         anpanMode ? '&anpanMode=true' : ''
-      }`
+      }${title ? '&title=' + title : ''}`
     );
 
     onDatePickerVisibility(false);
@@ -66,7 +79,11 @@ function DatePicker(props: DatePickerProps) {
 
   return (
     <>
-      <h2>Escolha uma data futura</h2>
+      <TitleWrapper>
+        <h2>O que vai acontecer?</h2>
+        <input onChange={updateTitle} />
+      </TitleWrapper>
+      <h2>Quando vai acontecer?</h2>
       <SingleDatePicker
         id="targetDay"
         date={targetDate}
