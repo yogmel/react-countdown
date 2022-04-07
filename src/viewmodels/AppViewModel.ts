@@ -43,6 +43,10 @@ export class AppViewModel {
     return this._anpanMode;
   }
 
+  get isPastDate() {
+    return Object.values(this.remainingTime).every((time) => time === 0);
+  }
+
   setRemainingTime = (value: TimeLeft) => {
     this._remainingTime = value;
   };

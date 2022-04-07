@@ -14,9 +14,9 @@ function CountdownWrapper(props: CountdownWrapperProps): ReactElement {
   const { handleDatePickerVisibility } = props;
   const {
     remainingTime,
+    message,
     setRemainingTime,
     setRandomMessage,
-    message,
   } = props.editor;
 
   useEffect(() => {

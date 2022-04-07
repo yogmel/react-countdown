@@ -44,7 +44,7 @@ function App(props: AppProps) {
 
   const goToDatePicker = () => {
     setShowDatePicker(true);
-    history.push('/');
+    history.replace({ pathname: '/' });
   };
 
   const handleDatePickerVisibility = (value: boolean) => {
